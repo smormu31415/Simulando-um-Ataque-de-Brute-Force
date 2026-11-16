@@ -1,5 +1,4 @@
 
-```markdown
 # Simulando-um-Ataque-de-Brute-Force
 
 Este projeto é a documentação de um ataque simulado em uma rede interna com o intuito de reforçar políticas de segurança, como senhas complexas, configuração de firewalls e monitoramento de logs.
