@@ -11,7 +11,9 @@ Neste exemplo iremos criar dois arquivos txt um contendo o uma lista de possivei
 ### Criando listas
 
 Para criar a lista de usuarios utilizaremos no terminal do nosso Kali linux utilizamos o comando:
-`echo -e "user\nmsfadmin\nadmin\nroot" > pass.txt`
+```
+echo -e "user\nmsfadmin\nadmin\nroot" > pass.txt
+```
 O que são os parametros do codigo acima?
     
 `echo -e` echo é representa a saida padrao do terminal geralmente utilizado  para exibir mensagens na tela, neste caso esta sendo utilizado com a flag `e` para interpretar qubras de linha `\n`
@@ -27,12 +29,16 @@ admin
 root
 ```
 Seguindo a mesma logica, iremos criar um arquivo pass.txt para criar uma lista de senhas utilizando o seguinte codigo:
-`echo -e "123456\npassword\nquerty\nmsfadmin" > pass.txt`
+```
+echo -e "123456\npassword\nquerty\nmsfadmin" > pass.txt
+```
 
 ### Utilizando o medusa para descobrir o login
 
 No terminal do Kali iremos rodar o `medusa` com o seguinte comando:
-`medusa -h 192.168.123.456 -U users.txt -P pass.txt -M ftp -t 6`
+```
+medusa -h 192.168.123.456 -U users.txt -P pass.txt -M ftp -t 6
+```
 `medusa` inicia o aplicativo medusa
 `-h` indica o alvo, neste caso o IP ficticio (192.168.123.456)
 `-U` parametro para indicar o arquvivo contendo a lista de usuarios
@@ -43,7 +49,9 @@ No terminal do Kali iremos rodar o `medusa` com o seguinte comando:
 Ao terminarmos de rodar o comando obtivemos o seguinte resultado:
 (IMAGEM AQUI FUTURAMENTE)
 podemos ver que temos um login com sucesso e a combinação utilizada foi user:msfadmin senha:msfadmin,agora que sabemos a senha podemos testar conexao utilizando:
-`ftp 192.168.123.456`
+```
+ftp 192.168.123.456
+```
 `ftp` irá indicar a conexao que queremos realizar 
 ele ira pedir senha e login, entao vamos inserir a que conseguimos utilizando o medusa, user:msfadmin senha:msfadmin. Sucesso, estamos logados!!!
 
@@ -79,4 +87,26 @@ ao rodarmos o comando iremos obter uma saida parecida com esta:
 (IMAGEM)
 Podemos notar que temos muitas tentativas e muitos [SUCESS] mas apenas a primeira aparição do sucess indica a combinação de senha e usuario que gerou o login, podemos testar este login no formulario web e podemos ver que funciona.
 ## Password spraying em SMB e enumeração de usuarios
-Agora iremos utilizar a tecnica de enumeraçao que nada mais é do que um levantamento de informações de um um sistema, podemos decobrir coisas como usuarios e grupos por exemplo, em seguida vamos usar o password Spraying que consiste em testar uma senha por vez para vários usuarios de uma lista, o password sprayin se mostra muito vantajoso por conta do seu baixo ruido comparado a outros metodos mais comuns, por testar logins em vários usuarios acaba sendo mais dificil de detectar ou de gerar um bloqueio de tentativas em um usuario,
+Agora iremos utilizar a técnica de enumeração que se trata de um levantamento de informações de um um sistema, podemos decobrir coisas como usuários e grupos por exemplo, em seguida vamos usar o password Spraying que consiste em testar uma senha por vez para vários usuarios de uma lista, o password sprayin se mostra muito vantajoso por conta do seu baixo ruido comparado a outros metodos mais comuns, por testar logins em vários usuarios acaba sendo mais dificil de detectar ou de gerar um bloqueio de tentativas em um usuário.
+
+### Enumeração
+Para enumerarmos a nossa vitima iremos utilizar:
+```
+enum4linux -a 192.168.123.456 | tee enum4_output.txt
+```
+`enum4linux` programa utilizado para realizar enumeração
+`-a` indica para o programa realizar toda a enumeração basica
+`tee enum4_output.txt` salva a saida em um arquivo txt chamado `enum4_output.txt`
+ 
+Ao rodar o codigo podemos obter informações como usuarios e grupos e usuarios que nos ajudam muito ao realizar tentativas de login:
+(IMAGEM)
+podemos utilizar o comando 
+```
+less enum4_output.txt
+````
+para ver a saida e utilizar as teclas (up_arrow e dwn_arrow) para navegar e utilizar a tecla q para sair.
+
+### Sprayin no serviÇo SMB
+
+
+
