@@ -48,5 +48,35 @@ podemos ver que temos um login com sucesso e a combinação utilizada foi user:m
 ele ira pedir senha e login, entao vamos inserir a que conseguimos utilizando o medusa, user:msfadmin senha:msfadmin. Sucesso, estamos logados!!!
 
 ## Brute force em formulario web
+Agora iremos simular um Brute force no formulario web DMVWA (Damn Vulnerable Web Application),
 
+### Descobrindo parametros
+primeiro iremos acessar em nosso navegador no Kali o formulario web buscando por `192.168.123.456/dwa/login.php` então para obter mais informações vamos apertatar a tecla F12 para entrar no modo desenvolvedor, iremos realizar uma tentativa de login qualquer, neste exemplo utilizei user:user e senha:user, podemos clicar em sima da primeira requisição post e entao em Request, com esta informação podemos descobrir o nome dos parametros passados para o Request, ou seja utilizando os parametros username, password, Login, podemos repassar estes parametros para realizar as tentativas de forma automatizada e identificar se a tentativa foi bem sucedida ou não.
+
+### Utilizando o medusa para brute force
+Para este formulario web iremos utilizar os mesmos arquivos txt criados anteriormente (pass.txt e users.txt ) para realizar as tentativas. iremos utilizar o seguinte comando:
+No terminal do Kali iremos rodar o `medusa` com o seguinte comando:
+
+```
+medusa -h 192.168.123.456 -U users.txt -P pass.txt -M http \
+-m PAGE:'dvwa/login.php' \
+-m FORM:'username=^USER^&password=^PASS^&Login=Login' \
+-m 'FAIL=Login failed' -t6
+```
+
+`medusa` inicia o aplicativo medusa
+`-h` indica o alvo, neste caso o IP ficticio (192.168.123.456)
+`-U` parametro para indicar o arquvivo contendo a lista de usuarios
+`-P` parametro para indicar o arquvivo contendo a lista de senhas
+`-M` Modo, indica o modo utilizado, neste caso o http
+`-m` indica que o parametro a ser passado para o modulo
+`-t` indica o numero de threads que sera utilizado para o teste de força bruta
+`-m PAGE:'dvwa/login.php' \` indica a localização do formulario web
+`-m FORM:'username=^USER^&password=^PASS^&Login=Login' \` indica os parametros a serem passados para os parametros do formulario 
+`-m 'FAIL=Login failed' -t6` inica o caso em que o formulario retorna falha, essencial para identificar um login de sucesso ou falha.
+
+ao rodarmos o comando iremos obter uma saida parecida com esta:
+(IMAGEM)
+Podemos notar que temos muitas tentativas e muitos [SUCESS] mas apenas a primeira aparição do sucess indica a combinação de senha e usuario que gerou o login, podemos testar este login no formulario web e podemos ver que funciona.
 ## Password spraying em SMB e enumeração de usuarios
+Agora iremos utilizar a tecnica de enumeraçao que nada mais é do que um levantamento de informações de um um sistema, podemos decobrir coisas como usuarios e grupos por exemplo, em seguida vamos usar o password Spraying que consiste em testar uma senha por vez para vários usuarios de uma lista, o password sprayin se mostra muito vantajoso por conta do seu baixo ruido comparado a outros metodos mais comuns, por testar logins em vários usuarios acaba sendo mais dificil de detectar ou de gerar um bloqueio de tentativas em um usuario,
